@@ -15,6 +15,11 @@ var (
 		Description: "build go command $pkg",
 	}, "workDir", "outputPath", "pkg")
 
+	goVendor = pctx.StaticRule("vendor", blueprint.RuleParams{
+		Command:     "cd $workDir && go mod vendor",
+		Description: "vendor dependencies of $name",
+	}, "workDir", "name")
+
 	goTest = pctx.StaticRule("test", blueprint.RuleParams{
 		Command:     "cd $workDir && go test -v $testPkg > $outputPath",
 		Description: "test $testPkg",
@@ -29,6 +34,7 @@ type testedBinaryModule struct {
 		Srcs []string
 		TestPkg string
 		TestSrcs []string
+		VendorFirst bool
 	}
 }
 
@@ -54,6 +60,22 @@ func (gb *testedBinaryModule) GenerateBuildActions(ctx blueprint.ModuleContext) 
 	inputs := convertPatternsIntoPaths(ctx, gb.properties.Srcs, gb.properties.TestSrcs)
 	testInputs := convertPatternsIntoPaths(ctx, gb.properties.TestSrcs, []string{})
 
+	if gb.properties.VendorFirst {
+		vendorDirPath := path.Join(ctx.ModuleDir(), "vendor")
+		ctx.Build(pctx, blueprint.BuildParams{
+			Description: fmt.Sprintf("Vendor dependencies of %s", name),
+			Rule:        goVendor,
+			Outputs:     []string{vendorDirPath},
+			Implicits:   []string{path.Join(ctx.ModuleDir(), "go.mod")},
+			Optional:    true,
+			Args: map[string]string{
+				"workDir": ctx.ModuleDir(),
+				"name":    name,
+			},
+
+		})
+	}
+
 	if inputs != nil {
 		ctx.Build(pctx, blueprint.BuildParams{
 			Description: fmt.Sprintf("Build %s as Go binary", name),
@@ -70,7 +92,7 @@ func (gb *testedBinaryModule) GenerateBuildActions(ctx blueprint.ModuleContext) 
 
 	if testInputs != nil {
 		ctx.Build(pctx, blueprint.BuildParams{
-			Description: fmt.Sprintf("Test my module"),
+			Description: fmt.Sprintf("Test module %s", gb.properties.TestPkg),
 			Rule:        goTest,
 			Outputs:     []string{pathToReports},
 			Implicits:   append(testInputs, inputs...),
