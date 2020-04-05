@@ -4,3 +4,12 @@ test_coverage {
   pkg: "github.com/KPI-Labs/design-lab-2/examples/test_coverage_example",
   srcs: ["**/*.go"],
 }
+
+go_binary {
+  name: "tested_go_bin_example",
+  pkg: "github.com/KPI-Labs/design-lab-2/examples/test_coverage_example",
+  testPkg: "github.com/KPI-Labs/design-lab-2/examples/test_coverage_example",
+  srcs: [ "**/*.go",],
+  testSrcs: [ "**/*_test.go",],
+}
+

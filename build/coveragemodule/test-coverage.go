@@ -11,7 +11,7 @@ var (
 	pctx = blueprint.NewPackageContext("github.com/KPI-Labs/design-lab-2/build/coveragemodule")
 
 	goTestCoverage = pctx.StaticRule("testCoverage", blueprint.RuleParams{
-		Command:     "cd $workDir && mkdir $outputReports && go test -v $pkg -coverprofile=$outputCoverage && go tool cover -html=$outputCoverage -o $outputHtml",
+		Command:     "cd $workDir && mkdir -p $outputReports && go test -v $pkg -coverprofile=$outputCoverage && go tool cover -html=$outputCoverage -o $outputHtml",
 		Description: "test coverage for $pkg",
 	}, "workDir", "pkg", "outputCoverage", "outputHtml", "outputReports")
 
