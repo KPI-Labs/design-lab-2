@@ -3,9 +3,7 @@ language: go
 go: "1.14"
 
 install:
-- wget https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-linux.zip
-- sudo unzip ninja-linux.zip
-- mv ninja $GOPATH/bin
+- sript-ninja.sh
 
 script:
 - cd $GOPATH/src/github.com/KPI-Labs/design-lab-2/build
