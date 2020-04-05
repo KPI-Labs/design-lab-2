@@ -1,0 +1,13 @@
+language: go
+
+go: "1.14"
+
+install:
+- . ./.script-ninja.sh
+
+script:
+- cd $GOPATH/src/github.com/KPI-Labs/design-lab-2/build
+- sudo chmod +x init-bood
+- ./init-bood
+- mv -f build-copy.bood build.bood
+- ./out/bin/bood 
