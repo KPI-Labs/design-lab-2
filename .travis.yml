@@ -7,7 +7,12 @@ install:
 
 script:
 - cd $GOPATH/src/github.com/KPI-Labs/design-lab-2/build
-- sudo chmod +x init-bood2
-- ./init-bood2
+<<<<<<< HEAD
+- sudo chmod +x init-bood
+- ./init-bood
+=======
+- sudo chmod +x init-bood
+- ./init-bood
+>>>>>>> 9104a26fcd4a43241e457de69d0ad90ed60e5817
 - mv -f build-copy.bood build.bood
 - ./out/bin/bood 
