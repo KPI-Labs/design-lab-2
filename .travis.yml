@@ -3,7 +3,7 @@ language: go
 go: "1.14"
 
 install:
-- ./build/sript-ninja.sh
+- $GOPATH/src/design-lab-2/build/script-ninja.sh
 
 script:
 - cd $GOPATH/src/github.com/KPI-Labs/design-lab-2/build
