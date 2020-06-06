@@ -3,11 +3,14 @@ language: go
 go: "1.14"
 
 install:
-- . ./.script-ninja.sh
+- wget https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-linux.zip
+- sudo apt install unzip
+- sudo unzip ninja-linux.zip -d /usr/local/bin/
+- go get -u github.com/roman-mazur/bood/cmd/bood
 
 script:
-- cd $GOPATH/src/github.com/KPI-Labs/design-lab-2/build
-- sudo chmod +x init-bood
-- ./init-bood
+- cd build/
+- bood
 - mv -f build-copy.bood build.bood
-- ./out/bin/bood 
+- ./out/bin/bood
+- cat ./out/reports/bood_test/test.txt

@@ -1,15 +1,16 @@
 go_binary {
 
-  name: "bood",
+  name: "bood_test",
 
-  pkg: "github.com/KPI-Labs/design-lab-2/build/cmd/bood",
+  testPkg: "github.com/KPI-Labs/design-lab-2/build/gomodule",
 
-  srcs: ["**/*.go", "../go.mod"]
+  testSrcs: ["**/*_test.go",],
 }
 
 test_coverage {
   name: "test_coverage_example",
 
   pkg: "github.com/KPI-Labs/design-lab-2/examples/test_coverage_example",
+  
   srcs: ["**/*.go"],
 }
