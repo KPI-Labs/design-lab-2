@@ -2,19 +2,19 @@ package coveragemodule
 
 import (
 	"fmt"
+	"path"
+
 	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
-	"path"
 )
 
 var (
 	pctx = blueprint.NewPackageContext("github.com/KPI-Labs/design-lab-2/build/coveragemodule")
 
 	goTestCoverage = pctx.StaticRule("testCoverage", blueprint.RuleParams{
-		Command:     "cd $workDir && mkdir -p $outputReports && go test -v $pkg -coverprofile=$outputCoverage && go tool cover -html=$outputCoverage -o $outputHtml",
+		Command:     "cd $workDir && mkdir -p $outputPath && go test -v $pkg -coverprofile=$outputCoverage && go tool cover -html=$outputCoverage -o $outputHtml",
 		Description: "test coverage for $pkg",
-	}, "workDir", "pkg", "outputCoverage", "outputHtml", "outputReports")
-
+	}, "workDir", "pkg", "outputPath", "outputCoverage", "outputHtml")
 )
 
 type testCoverageModule struct {
@@ -22,7 +22,7 @@ type testCoverageModule struct {
 
 	properties struct {
 		Name string
-		Pkg string
+		Pkg  string
 		Srcs []string
 	}
 }
@@ -44,9 +44,9 @@ func (gb *testCoverageModule) GenerateBuildActions(ctx blueprint.ModuleContext) 
 	name := ctx.ModuleName()
 	config := bood.ExtractConfig(ctx)
 
-	pathToReports := path.Join(config.BaseOutputDir, "reports")
-	pathToCoverageReports := path.Join(pathToReports, fmt.Sprintf("%s.out", name))
-	pathToCoverageHtml := path.Join(pathToReports, fmt.Sprintf("%s.html", name))
+	pathToReports := path.Join(config.BaseOutputDir, "reports", name)
+	pathToCoverageReports := path.Join(pathToReports, "coverage.out")
+	pathToCoverageHtml := path.Join(pathToReports, "coverage.html")
 
 	inputs := convertPatternsIntoPaths(ctx, gb.properties.Srcs, []string{})
 
@@ -57,11 +57,11 @@ func (gb *testCoverageModule) GenerateBuildActions(ctx blueprint.ModuleContext) 
 			Outputs:     []string{config.BaseOutputDir},
 			Implicits:   inputs,
 			Args: map[string]string{
-				"outputReports": pathToReports,
+				"outputPath":     pathToReports,
 				"outputCoverage": pathToCoverageReports,
-				"outputHtml": pathToCoverageHtml,
-				"workDir":    ctx.ModuleDir(),
-				"pkg":        gb.properties.Pkg,
+				"outputHtml":     pathToCoverageHtml,
+				"workDir":        ctx.ModuleDir(),
+				"pkg":            gb.properties.Pkg,
 			},
 		})
 	}

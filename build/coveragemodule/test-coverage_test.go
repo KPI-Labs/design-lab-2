@@ -2,10 +2,11 @@ package coveragemodule
 
 import (
 	"bytes"
-	"github.com/google/blueprint"
-	"github.com/roman-mazur/bood"
 	"strings"
 	"testing"
+
+	"github.com/google/blueprint"
+	"github.com/roman-mazur/bood"
 )
 
 var fileSystemDescriptions = []map[string][]byte{
@@ -27,9 +28,8 @@ var expectedOutput = [][]string{
 		"out:",
 		"g.coveragemodule.testCoverage | main_test.go main.go",
 		"description = Test coverage for package-out",
-		"outputCoverage = out/reports/package-out.out",
-		"outputHtml = out/reports/package-out.html",
-		"outputReports = out/reports",
+		"outputCoverage = out/reports/package-out/coverage.out",
+		"outputHtml = out/reports/package-out/coverage.html",
 	},
 }
 
